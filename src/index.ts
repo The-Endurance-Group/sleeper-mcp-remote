@@ -1,5 +1,6 @@
 import { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
+import { extraTools, handleExtra, isExtraTool } from "./extras.js";
 import type { Transport } from "@modelcontextprotocol/sdk/shared/transport.js";
 import {
   CallToolRequestSchema,
@@ -494,6 +495,12 @@ export class SleeperMCPServer {
             (this.users.length === 1 && this.users[0].username === 'your_sleeper_username')) {
           this.validateConfiguration();
         }
+        if (isExtraTool(name)) {
+          return await handleExtra(name, args, async (hint) => {
+            const found = await this.findUserAndLeague(hint);
+            return found ? { league: { ...found.league, rosterId: found.rosterId ?? found.league.rosterId } } : null;
+          });
+        }
         switch (name) {
           case "get_user":
             return await this.getUser(args?.username as string);
@@ -653,6 +660,7 @@ export class SleeperMCPServer {
 
   private getTools(): Tool[] {
     return [
+      ...(extraTools as Tool[]),
       {
         name: "get_user",
         description: "Get Sleeper user information by username",
