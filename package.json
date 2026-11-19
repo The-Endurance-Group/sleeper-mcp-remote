@@ -1,0 +1,20 @@
+{
+  "name": "sleeper-api-mcp",
+  "version": "1.0.0",
+  "description": "MCP server for Sleeper fantasy football API",
+  "type": "module",
+  "scripts": {
+    "build": "bun build src/index.ts --compile --outfile sleeper-mcp",
+    "dev": "bun run src/index.ts"
+  },
+  "keywords": [
+    "mcp",
+    "sleeper",
+    "fantasy-football"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.18.0"
+  }
+}
